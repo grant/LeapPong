@@ -73,6 +73,7 @@ aside.scores {
 
   text-align: center;
   background-color: rgba(62, 83, 94, 1);
+  border-radius: 0 0 3px 3px;
 }
 
 .score {
@@ -93,11 +94,13 @@ aside.scores {
 .player.paddle {
   bottom: 0;
   left: 30%;
+  border-radius: 3px 3px 0 0;
 }
 
 .enemy.paddle {
   top: 0;
   left: 70%;
+  border-radius: 0 0 3px 3px;
 }
 
 .paddle {
@@ -110,4 +113,5 @@ aside.scores {
   height: 7%;
   left: 23%;
   top: 54%;
+  border-radius: 3px;
 }
