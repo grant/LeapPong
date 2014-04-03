@@ -1,5 +1,17 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .overlay
+    .center
+      h1= title
+      button Single Player
+      button Multiplayer
+  .underlay
+    .game
+      aside.score
+        .player 0
+        .enemy 0
+      .board
+        .player.paddle
+        .enemy.paddle
+        .ball
