@@ -90,6 +90,16 @@ aside.scores {
   background-color: rgba(255, 255, 255, 0.7);
 }
 
+.player.paddle {
+  bottom: 0;
+  left: 30%;
+}
+
+.enemy.paddle {
+  top: 0;
+  left: 70%;
+}
+
 .paddle {
   width: 15%;
   height: 7%;
@@ -98,4 +108,6 @@ aside.scores {
 .ball {
   width: 4%;
   height: 7%;
+  left: 23%;
+  top: 54%;
 }
