@@ -34,6 +34,7 @@ $(function() {
   });
 
   // Leap motion controls
+  leap.connect();
   leap.on('frame', function(frame) {
     if (game.hasStarted) {
       var fingers = frame.fingers;
@@ -55,5 +56,9 @@ $(function() {
     }
   });
 
-  leap.connect();
+  // Socket.IO
+  var socket = io.connect();
+  socket.on('update game state', function (gameState) {
+    console.log(gameState);
+  });
 });
