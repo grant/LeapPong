@@ -1,7 +1,7 @@
 /**
  * The server-side game
  */
-function Game () {
+function Game (server) {
   // Constants
 
   // Fields
@@ -17,4 +17,17 @@ function Game () {
     player1: undefined,
     player2: undefined
   };
+
+  // Setup
+  (function setup() {
+    var io = require('socket.io').listen(server);
+
+    io.sockets.on('connection', function(socket) {
+        socket.on('leap-data', function(data) {
+            console.log(data);
+        });
+    });
+  })();
 }
+
+module.exports = Game;

@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var leap = new Leap.Controller();
-  var socket = io.connect('http://localhost');
+  var socket = io.connect();
 
   leap.on('connect', function() {
     console.log('device connected');
@@ -11,6 +11,7 @@ $(document).ready(function() {
     if (fingers.length) {
       var position = fingers[0].tipPosition;
       var x = position[0];
+      console.log(x);
     }
     // socket.emit('leap-data', {leapData: frame.fingers});
   });
