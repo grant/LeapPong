@@ -124,7 +124,7 @@ function Game (server) {
             console.log(data);
         });
 
-        socket.broadcast('update', game.toJSON());
+        // socket.broadcast('update', game.toJSON());
     });
 
     // Setup game interval
