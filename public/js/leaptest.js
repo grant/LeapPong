@@ -1,5 +1,3 @@
-'use strict';
-
 $(document).ready(function() {
   var leap = new Leap.Controller();
   var socket = io.connect('http://localhost');
@@ -9,8 +7,12 @@ $(document).ready(function() {
   });
 
   leap.on('frame', function(frame) {
-    // console.log(frame);
-    socket.emit('leap-data', {leapData: frame.fingers});
+    var fingers = frame.fingers;
+    if (fingers.length) {
+      var position = fingers[0].tipPosition;
+      var x = position[0];
+    }
+    // socket.emit('leap-data', {leapData: frame.fingers});
   });
 
   leap.connect();
