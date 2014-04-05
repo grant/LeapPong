@@ -38,6 +38,11 @@ function Game () {
     };
   };
 
+  /**
+   * Moves the paddle relative to the current position
+   * @param {String} paddleName The paddle name ('enemy' or 'player')
+   * @param {String} direction 'left' or 'right'
+   */
   this.movePaddle = function (paddleName, direction) {
     var windowWidth = parseFloat($(window).width());
     var paddle = this.paddles[paddleName];
@@ -54,6 +59,12 @@ function Game () {
     this.setPaddleX(paddleName, newX);
   };
 
+  /**
+   * Pass a paddle name and an x percentage (0 to 100)
+   * Ex: setPaddleX('player', 20)
+   * @param {String} paddleName The paddle name ('enemy' or 'player')
+   * @param {Number} x A number between 0 and 100
+   */
   this.setPaddleX = function (paddleName, x) {
     var windowWidth = parseFloat($(window).width());
     var paddle = this.paddles[paddleName];
