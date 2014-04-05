@@ -23,10 +23,10 @@ $(function() {
       var right = ascii === 39;
 
       if (left) {
-        game.movePaddle('left');
+        game.movePaddle('player', 'left');
       }
       if (right) {
-        game.movePaddle('right');
+        game.movePaddle('player', 'right');
       }
     }
   });

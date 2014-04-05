@@ -1,3 +1,6 @@
+/**
+ * The client-side game
+ */
 function Game () {
   // Constants
 
@@ -32,10 +35,10 @@ function Game () {
     };
   };
 
-  this.movePaddle = function (direction) {
+  this.movePaddle = function (paddleName, direction) {
     var windowWidth = parseFloat($(window).width());
 
-    var $paddle = this.paddles.player.element;
+    var $paddle = this.paddles[paddleName].element;
     var paddleWidth = parseFloat($paddle.width());
     var paddlePercentWidth = (100 * paddleWidth) / windowWidth;
 
