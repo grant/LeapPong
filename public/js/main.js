@@ -33,21 +33,25 @@ $(function() {
     }
   });
 
+  // Leap motion controls
   leap.on('frame', function(frame) {
     if (game.hasStarted) {
-        var fingers = frame.fingers;
-        if (fingers.length) {
-            var total = 0;
-            for (var i in fingers) {
-                total = total + fingers[i].tipPosition[0]; // x coordinate
-            }
-            var x = total / fingers.length;
-            if (x > (-1 * LEAP_RANGE) && x < LEAP_RANGE) {
-                x = x + LEAP_RANGE;
-                newX = x / (LEAP_RANGE * 2) * 100;
-                game.setPaddleX('player', newX);
-            }
+      var fingers = frame.fingers;
+      if (fingers.length) {
+        // Average finger x
+        var total = 0;
+        for (var i in fingers) {
+          total = total + fingers[i].tipPosition[0]; // x coordinate
         }
+        var x = total / fingers.length;
+
+        // Translates leap motion x to paddle x
+        if (x > (-1 * LEAP_RANGE) && x < LEAP_RANGE) {
+          x = x + LEAP_RANGE;
+          newX = x / (LEAP_RANGE * 2) * 100;
+          game.setPaddleX('player', newX);
+        }
+      }
     }
   });
 
