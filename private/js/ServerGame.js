@@ -1,7 +1,7 @@
 /**
  * The server-side game
  */
-function ServerGame (server) {
+function Game (server) {
   // Constants
   var UPDATE_INTERVAL = 100; // ms
 
@@ -88,6 +88,7 @@ function ServerGame (server) {
       game.ball.vy *= -1;
       game.ball.y = game.paddles.player1.y + (game.ball.height / 2) + (paddleHeight / 2) + game.ball.vy;
     }
+    // console.log(game.toJSON());
   };
 
   /**
@@ -120,11 +121,15 @@ function ServerGame (server) {
     // Setup Socket.IO
     var io = require('socket.io').listen(server);
     io.sockets.on('connection', function(socket) {
-        socket.on('leap-data', function(data) {
-            console.log(data);
-        });
+      // Receive paddle x
+      socket.on('update paddle x', function(data) {
+        // console.log(data);
+      });
 
-        // socket.broadcast('update', game.toJSON());
+      // Push game state to clients
+
+
+      // socket.broadcast('update', game.toJSON());
     });
 
     // Setup game interval
@@ -133,4 +138,4 @@ function ServerGame (server) {
   })();
 }
 
-module.exports = ServerGame;
+module.exports = Game;
