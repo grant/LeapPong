@@ -35,8 +35,8 @@ function Game (server) {
   };
 
   // Paddles
-  var paddleHeight = 15;
-  var paddleWidth = 7;
+  var paddleHeight = 7;
+  var paddleWidth = 15;
   this.paddles = {
     player1: {
       x: 50,
