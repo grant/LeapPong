@@ -3,6 +3,8 @@
  */
 function Game (server) {
   // Constants
+  var UPDATE_INTERVAL = 100; // ms
+
   var BALL_SPEED = 5;
 
   // Fields
@@ -16,8 +18,10 @@ function Game (server) {
 
   // Ball
   this.ball = {
-    x: 0,
-    y: 0,
+    x: undefined,
+    y: undefined,
+    width: 4,
+    height: 7,
     vx: 0,
     vy: 1,
     setXY: function (x, y) {
@@ -31,23 +35,18 @@ function Game (server) {
   };
 
   // Paddles
+  var paddleHeight = 15;
+  var paddleWidth = 7;
   this.paddles = {
-    player1: undefined,
-    player2: undefined
+    player1: {
+      x: 50,
+      y: paddleHeight / 2
+    },
+    player2: {
+      x: 50,
+      y: 100 - paddleHeight / 2
+    }
   };
-
-  // Setup
-  (function setup() {
-    var io = require('socket.io').listen(server);
-
-    io.sockets.on('connection', function(socket) {
-        socket.on('leap-data', function(data) {
-            console.log(data);
-        });
-
-        socket.broadcast('update', game.toJSON());
-    });
-  })();
 
   // Methods
 
@@ -56,17 +55,24 @@ function Game (server) {
    */
   this.updateGame = function () {
     // Update the ball position
-    this.ball.x += this.ball.vx;
-    this.ball.y += this.ball.vy;
+    game.ball.x += game.ball.vx;
+    game.ball.y += game.ball.vy;
 
-    // If the ball is out of bounds, update the score
-    if (ball.y < 0) {
-      ++this.scores.player2;
-      this.reset();
-    } else if (ball.y > 100) {
-      ++this.scores.player1;
-      this.reset();
+    // If the ball is out of the y bounds, update the score
+    if (ball.y <= 0) {
+      ++game.scores.player2;
+      game.reset();
+    } else if (ball.y >= 100) {
+      ++game.scores.player1;
+      game.reset();
     }
+
+    // Bounce the ball off the walls
+    if (game.ball.x <= 0 || game.ball.x >= 100) {
+      game.ball.vx *= -1;
+      game.ball.x = game.ball.vx;
+    }
+    console.log(game.toJSON());
   };
 
   /**
@@ -82,10 +88,34 @@ function Game (server) {
    */
   this.toJSON = function () {
     return {
-      ball: this.ball,
-      paddles: this.paddles
+      ball: {
+        x: this.ball.x,
+        y: this.ball.y
+      },
+      paddles: {
+        player1: this.paddles.player1,
+        player2: this.paddles.player2
+      },
+      scores: this.scores
     };
   };
+
+  // Setup
+  (function setup() {
+    // Setup Socket.IO
+    var io = require('socket.io').listen(server);
+    io.sockets.on('connection', function(socket) {
+        socket.on('leap-data', function(data) {
+            console.log(data);
+        });
+
+        socket.broadcast('update', game.toJSON());
+    });
+
+    // Setup game interval
+    game.reset();
+    setInterval(game.updateGame, UPDATE_INTERVAL);
+  })();
 }
 
 module.exports = Game;
