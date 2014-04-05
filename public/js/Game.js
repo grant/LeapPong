@@ -66,6 +66,7 @@ function Game () {
    * @param {Number} x A number between 0 and 100
    */
   this.setPaddleX = function (paddleName, x) {
+    console.log(this.paddles);
     var windowWidth = parseFloat($(window).width());
     var paddle = this.paddles[paddleName];
     var $paddle = paddle.element;
@@ -86,7 +87,7 @@ function Game () {
    * @param {Number} x A number between 0 and 100
    * @param {Number} y A number between 0 and 100
    */
-  this.setBallXY = function(x, y) {
+  this.setBallXY = function (x, y) {
     var windowWidth = parseFloat($(window).width());
     var windowHeight = parseFloat($(window).height());
     var ballWidth = parseFloat($('.ball').width());

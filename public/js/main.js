@@ -1,8 +1,10 @@
 var FADE_TIME = 200;
+var LEAP_RANGE = 200;
 
 $(function() {
   var $popup = $('.popup');
   var $game = $('.game');
+  var leap = new Leap.Controller();
 
   // Setup
   var game = new Game();
@@ -30,4 +32,21 @@ $(function() {
       }
     }
   });
+
+  leap.on('frame', function(frame) {
+    if (game.hasStarted) {
+        var fingers = frame.fingers;
+        if (fingers.length) {
+            var position = fingers[0].tipPosition;
+            var x = position[0];
+            if (x > (-1 * LEAP_RANGE) && x < LEAP_RANGE) {
+                x = x + LEAP_RANGE;
+                newX = x / (LEAP_RANGE * 2) * 100;
+                game.setPaddleX('player', newX);
+            }
+        }
+    }
+  });
+
+  leap.connect();
 });
