@@ -23,11 +23,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/leaptest', routes.leaptest);
 
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
 // Sets up the game
-var game = require('./private/js/Game')(server);
+var game = require('./private/js/ServerGame')(server);

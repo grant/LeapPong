@@ -7,7 +7,7 @@ $(function() {
   var leap = new Leap.Controller();
 
   // Setup
-  var game = new Game();
+  var game = new ClientGame();
 
   // Popup controls
   $popup.find('button').click(function () {
