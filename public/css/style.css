@@ -106,6 +106,7 @@ aside.scores {
 .paddle {
   width: 15%;
   height: 7%;
+  transition: left 300ms;
 }
 
 .ball {

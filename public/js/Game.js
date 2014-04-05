@@ -4,7 +4,7 @@
 function Game () {
   // Constants
 
-  var MOVE_SPEED = 3;
+  var PADDLE_MOVE_SPEED = 5;
 
   // Fields
 
@@ -47,9 +47,9 @@ function Game () {
     var xRatio = x / windowWidth;
     var newX;
     if (direction === 'left') {
-      newX = x - MOVE_SPEED;
+      newX = x - PADDLE_MOVE_SPEED;
     } else {
-      newX = x + MOVE_SPEED;
+      newX = x + PADDLE_MOVE_SPEED;
     }
     this.setPaddleX(paddleName, newX);
   };
