@@ -37,8 +37,11 @@ $(function() {
     if (game.hasStarted) {
         var fingers = frame.fingers;
         if (fingers.length) {
-            var position = fingers[0].tipPosition;
-            var x = position[0];
+            var total = 0;
+            for (var i in fingers) {
+                total = total + fingers[i].tipPosition[0]; // x coordinate
+            }
+            var x = total / fingers.length;
             if (x > (-1 * LEAP_RANGE) && x < LEAP_RANGE) {
                 x = x + LEAP_RANGE;
                 newX = x / (LEAP_RANGE * 2) * 100;
