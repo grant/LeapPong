@@ -87,7 +87,6 @@ function Game () {
    * @param {Number} y A number between 0 and 100
    */
   this.setBallXY = function(x, y) {
-    console.log('here');
     var windowWidth = parseFloat($(window).width());
     var windowHeight = parseFloat($(window).height());
     var ballWidth = parseFloat($('.ball').width());
@@ -97,11 +96,12 @@ function Game () {
     var ballPercentHeight = (ballHeight / windowHeight) * 100;
 
     var xRatio = x / 100;
-    var newX = xRatio * (100 - ballPercentWidth);
     var yRatio = y / 100;
+
+    var newX = xRatio * (100 - ballPercentWidth);
     var newY = yRatio * (100 - ballPercentHeight);
 
     $('.ball').css('left', newX + '%');
-    $('.ball').css('right', newY + '%');
+    $('.ball').css('top', newY + '%');
   }
 }
