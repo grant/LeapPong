@@ -72,7 +72,22 @@ function Game (server) {
       game.ball.vx *= -1;
       game.ball.x = game.ball.vx;
     }
-    console.log(game.toJSON());
+
+    // Bounce ball off paddles
+    // Bottom paddle
+    if (game.ball.y + (game.ball.height / 2) >= game.paddles.player2.y - (paddleHeight / 2) &&
+        game.ball.x >= game.paddles.player2.x - (paddleWidth / 2) &&
+        game.ball.x <= game.paddles.player2.x + (paddleWidth / 2)) {
+      game.ball.vy *= -1;
+      game.ball.y = game.paddles.player2.y - (game.ball.height / 2) - (paddleHeight / 2) + game.ball.vy;
+    }
+    // Top paddle
+    if (game.ball.y - (game.ball.height / 2) <= game.paddles.player1.y + (paddleHeight / 2) &&
+        game.ball.x >= game.paddles.player1.x - (paddleWidth / 2) &&
+        game.ball.x <= game.paddles.player1.x + (paddleWidth / 2)) {
+      game.ball.vy *= -1;
+      game.ball.y = game.paddles.player1.y + (game.ball.height / 2) + (paddleHeight / 2) + game.ball.vy;
+    }
   };
 
   /**
