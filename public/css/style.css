@@ -115,4 +115,6 @@ aside.scores {
   left: 23%;
   top: 54%;
   border-radius: 3px;
+  transition: left 300ms;
+  transition: right 300ms;
 }

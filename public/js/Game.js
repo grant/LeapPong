@@ -79,4 +79,29 @@ function Game () {
     var leftOffset = xRatio * (100 - paddlePercentWidth);
     $paddle.css('left', leftOffset + '%');
   };
+
+  /*
+   * Pass an x percentage (0 to 100) and y percentage (0 to 100)
+   * Ex: setBall(75, 50)
+   * @param {Number} x A number between 0 and 100
+   * @param {Number} y A number between 0 and 100
+   */
+  this.setBallXY = function(x, y) {
+    console.log('here');
+    var windowWidth = parseFloat($(window).width());
+    var windowHeight = parseFloat($(window).height());
+    var ballWidth = parseFloat($('.ball').width());
+    var ballHeight = parseFloat($('.ball').height());
+
+    var ballPercentWidth = (ballWidth / windowWidth) * 100;
+    var ballPercentHeight = (ballHeight / windowHeight) * 100;
+
+    var xRatio = x / 100;
+    var newX = xRatio * (100 - ballPercentWidth);
+    var yRatio = y / 100;
+    var newY = yRatio * (100 - ballPercentHeight);
+
+    $('.ball').css('left', newX + '%');
+    $('.ball').css('right', newY + '%');
+  }
 }
