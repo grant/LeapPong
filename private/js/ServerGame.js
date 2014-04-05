@@ -3,7 +3,8 @@
  */
 function Game (server) {
   // Constants
-  var UPDATE_INTERVAL = 100; // ms
+  var SERVER_FRAME_RATE = 10; // fps
+  var CLIENT_FRAME_RATE = 30; // fps
 
   var BALL_SPEED = 5;
 
@@ -127,6 +128,9 @@ function Game (server) {
       });
 
       // Push game state to clients
+      setInterval(function () {
+        socket.emit('update game state', game.toJSON());
+      }, 1000 / CLIENT_FRAME_RATE);
 
 
       // socket.broadcast('update', game.toJSON());
@@ -134,7 +138,7 @@ function Game (server) {
 
     // Setup game interval
     game.reset();
-    setInterval(game.updateGame, UPDATE_INTERVAL);
+    setInterval(game.updateGame, 1000 / SERVER_FRAME_RATE);
   })();
 }
 
