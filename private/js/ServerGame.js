@@ -6,7 +6,7 @@ function Game (server) {
   var SERVER_FRAME_RATE = 30; // fps
   var CLIENT_FRAME_RATE = 30; // fps
 
-  var BALL_SPEED = 5;
+  var BALL_SPEED = 15;
 
   // Fields
   var game = this;
