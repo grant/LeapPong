@@ -3,7 +3,7 @@
  */
 function Game (server) {
   // Constants
-  var SERVER_FRAME_RATE = 10; // fps
+  var SERVER_FRAME_RATE = 30; // fps
   var CLIENT_FRAME_RATE = 30; // fps
 
   var BALL_SPEED = 5;
@@ -41,11 +41,11 @@ function Game (server) {
   this.paddles = {
     player1: {
       x: 50,
-      y: paddleHeight / 2
+      y: 0
     },
     player2: {
       x: 50,
-      y: 100 - paddleHeight / 2
+      y: 100
     }
   };
 
@@ -76,18 +76,18 @@ function Game (server) {
 
     // Bounce ball off paddles
     // Bottom paddle
-    if (game.ball.y + (game.ball.height / 2) >= game.paddles.player2.y - (paddleHeight / 2) &&
+    if (game.ball.y + (game.ball.height / 2) > game.paddles.player2.y - (paddleHeight / 2) &&
         game.ball.x >= game.paddles.player2.x - (paddleWidth / 2) &&
         game.ball.x <= game.paddles.player2.x + (paddleWidth / 2)) {
       game.ball.vy *= -1;
-      game.ball.y = game.paddles.player2.y - (game.ball.height / 2) - (paddleHeight / 2) + game.ball.vy;
+      game.ball.y = game.paddles.player2.y - (game.ball.height / 2) - (paddleHeight / 2);
     }
     // Top paddle
-    if (game.ball.y - (game.ball.height / 2) <= game.paddles.player1.y + (paddleHeight / 2) &&
+    if (game.ball.y - (game.ball.height / 2) < game.paddles.player1.y + (paddleHeight / 2) &&
         game.ball.x >= game.paddles.player1.x - (paddleWidth / 2) &&
         game.ball.x <= game.paddles.player1.x + (paddleWidth / 2)) {
       game.ball.vy *= -1;
-      game.ball.y = game.paddles.player1.y + (game.ball.height / 2) + (paddleHeight / 2) + game.ball.vy;
+      game.ball.y = game.paddles.player1.y + (game.ball.height / 2) + (paddleHeight / 2);
     }
     // console.log(game.toJSON());
   };
@@ -135,10 +135,11 @@ function Game (server) {
         hasTwoPlayers = true;
         socket.name = 'player2';
       }
+      socket.emit('set name', socket.name);
 
       // Receive paddle x
-      socket.on('update paddle x', function(data) {
-        // console.log(data);
+      socket.on('update paddle x', function(x) {
+        console.log(x);
       });
 
       // Push game state to clients

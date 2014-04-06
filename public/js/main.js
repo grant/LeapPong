@@ -1,5 +1,6 @@
 var FADE_TIME = 200;
 var LEAP_RANGE = 200;
+var UPDATE_FRAME_RATE = 30; // fps
 
 $(function() {
   var $popup = $('.popup');
@@ -57,8 +58,17 @@ $(function() {
   });
 
   // Socket.IO
+
   var socket = io.connect();
   socket.on('update game state', function (gameState) {
-    console.log(gameState);
+    game.update(gameState);
   });
+  socket.on('set name', function (name) {
+    game.setName(name);
+  });
+
+  // Send paddle x data
+  setInterval(function () {
+    socket.emit('update paddle x', game.getPaddleX());
+  }, 1000 / UPDATE_FRAME_RATE);
 });

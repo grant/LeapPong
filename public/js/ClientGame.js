@@ -8,6 +8,8 @@ function ClientGame () {
 
   // Fields
 
+  this.name = undefined; // The name of this client's connection
+
   // Scores
   this.scores = {
     enemy: 0,
@@ -80,13 +82,22 @@ function ClientGame () {
     $paddle.css('left', leftOffset + '%');
   };
 
+  /**
+   * Gets the paddle's x
+   * @returns {Number} The paddle's x
+   */
+  this.getPaddleX = function () {
+    return this.paddles.player.x;
+  };
+
   /*
    * Pass an x percentage (0 to 100) and y percentage (0 to 100)
    * Ex: setBall(75, 50)
-   * @param {Number} x A number between 0 and 100
-   * @param {Number} y A number between 0 and 100
+   * @param {Object} coordinates An object containing x and y
+   * @param {Number} coordinates.x A number between 0 and 100
+   * @param {Number} coordinates.y A number between 0 and 100
    */
-  this.setBallXY = function (x, y) {
+  this.setBallXY = function (coordinates) {
     var windowWidth = parseFloat($(window).width());
     var windowHeight = parseFloat($(window).height());
     var ballWidth = parseFloat($('.ball').width());
@@ -95,13 +106,61 @@ function ClientGame () {
     var ballPercentWidth = (ballWidth / windowWidth) * 100;
     var ballPercentHeight = (ballHeight / windowHeight) * 100;
 
-    var xRatio = x / 100;
-    var yRatio = y / 100;
+    var xRatio = coordinates.x / 100;
+    var yRatio = coordinates.y / 100;
 
     var newX = xRatio * (100 - ballPercentWidth);
     var newY = yRatio * (100 - ballPercentHeight);
 
     $('.ball').css('left', newX + '%');
     $('.ball').css('top', newY + '%');
-  }
+  };
+
+  /**
+   * Updates the score UI
+   */
+  this.updateScoresUI = function () {
+    var scores = Object.keys(this.scores);
+    for (var key in this.scores) {
+      $('.' + key + '.score').html(this.scores[key]);
+    }
+  };
+
+  //
+  // Server/Socket.IO
+  //
+
+  /**
+   * Updates the game from the server
+   * @param {Object} gameState The server game state
+   */
+  this.update = function (gameState) {
+    // Update the ball
+    var ball = gameState.ball;
+    this.setBallXY(ball);
+
+    // Update the paddle
+    var enemyName;
+    if (this.name === 'player1') {
+      enemyName = 'player2';
+    } else {
+      enemyName = 'player1';
+    }
+    this.setPaddleX('enemy', gameState.paddles[enemyName].x);
+
+    // Update the score
+    this.scores = {
+      'player': gameState.scores[this.name],
+      'enemy': gameState.scores[enemyName]
+    };
+    this.updateScoresUI();
+  };
+
+  /**
+   * Sets a unique name to the player
+   * @param {String} name The unique name
+   */
+  this.setName = function (name) {
+    this.name = name;
+  };
 }
