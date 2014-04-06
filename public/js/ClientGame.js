@@ -98,6 +98,12 @@ function ClientGame () {
    * @param {Number} coordinates.y A number between 0 and 100
    */
   this.setBallXY = function (coordinates) {
+    // Reflect the ball y because the enemy for both players is on top and
+    // so we need one of the players to have a flipped ball y coordinate
+    if (this.name === 'player1') {
+      coordinates.y = 100 - coordinates.y;
+    }
+
     var windowWidth = parseFloat($(window).width());
     var windowHeight = parseFloat($(window).height());
     var ballWidth = parseFloat($('.ball').width());

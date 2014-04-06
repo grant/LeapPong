@@ -72,29 +72,44 @@ function Game (server) {
     }
 
     // Bounce the ball off the walls
-    if (ball.x <= 0 || ball.x >= 100) {
+    if (ball.x < 0) {
       ball.vx *= -1;
-      ball.x = ball.vx;
+      ball.x = 0;
+    } else if (ball.x > 100) {
+      ball.vx *= -1;
+      ball.x = 100;
     }
 
     // Bounce ball off paddles
     var paddle1 = game.paddles.player1;
     var paddle2 = game.paddles.player2;
+    var bouncedOffPaddle = false;
+    var bouncedPaddle;
+
     // Bottom paddle
     if (ball.y + (ball.height / 2) > paddle2.y - (paddleHeight / 2) &&
-        ball.x >= paddle2.x - (paddleWidth / 2) &&
-        ball.x <= paddle2.x + (paddleWidth / 2)) {
-      ball.vy *= -1;
+        ball.x + (ball.width / 2) >= paddle2.x - (paddleWidth / 2) &&
+        ball.x - (ball.width / 2) <= paddle2.x + (paddleWidth / 2)) {
+      bouncedOffPaddle = true;
+      bouncedPaddle = paddle2;
       ball.y = paddle2.y - (ball.height / 2) - (paddleHeight / 2);
     }
     // Top paddle
     if (ball.y - (ball.height / 2) < paddle1.y + (paddleHeight / 2) &&
-        ball.x >= paddle1.x - (paddleWidth / 2) &&
-        ball.x <= paddle1.x + (paddleWidth / 2)) {
-      ball.vy *= -1;
+        ball.x + (ball.width / 2) >= paddle1.x - (paddleWidth / 2) &&
+        ball.x - (ball.width / 2) <= paddle1.x + (paddleWidth / 2)) {
+      bouncedOffPaddle = true;
+      bouncedPaddle = paddle1;
       ball.y = paddle1.y + (game.ball.height / 2) + (paddleHeight / 2);
     }
-    console.log(game.toJSON());
+
+    if (bouncedOffPaddle) {
+      ball.vy *= -1;
+      // The offset from the middle of the paddle from (-1 to 1). 0 is the center
+      var middleOffset = (ball.x - bouncedPaddle.x) / ((paddleWidth + ball.width) / 2);
+      ball.vx = middleOffset;
+    }
+    // console.log(game.toJSON());
   };
 
   /**
