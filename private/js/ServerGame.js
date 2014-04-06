@@ -119,9 +119,23 @@ function Game (server) {
 
   // Setup
   (function setup() {
+    var player1Connected = false;
+    var hasTwoPlayers = false;
+
     // Setup Socket.IO
     var io = require('socket.io').listen(server);
     io.sockets.on('connection', function(socket) {
+      // Setup players
+
+      // Player 1
+      if (!player1Connected) {
+        player1Connected = true;
+        socket.name = 'player1';
+      } else if (!hasTwoPlayers) { // Player 2
+        hasTwoPlayers = true;
+        socket.name = 'player2';
+      }
+
       // Receive paddle x
       socket.on('update paddle x', function(data) {
         // console.log(data);
