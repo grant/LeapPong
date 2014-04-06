@@ -30,6 +30,8 @@ function Game (server) {
       this.y = y;
     },
     reset: function (x, y) {
+      this.vx = 0;
+      this.vy = 1;
       this.x = 50;
       this.y = 50;
     }
@@ -55,9 +57,10 @@ function Game (server) {
    * The main method to update the game
    */
   this.updateGame = function () {
+    var ball = game.ball;
     // Update the ball position
-    game.ball.x += game.ball.vx;
-    game.ball.y += game.ball.vy;
+    ball.x += ball.vx;
+    ball.y += ball.vy;
 
     // If the ball is out of the y bounds, update the score
     if (ball.y <= 0) {
@@ -69,27 +72,38 @@ function Game (server) {
     }
 
     // Bounce the ball off the walls
-    if (game.ball.x <= 0 || game.ball.x >= 100) {
-      game.ball.vx *= -1;
-      game.ball.x = game.ball.vx;
+    if (ball.x <= 0 || ball.x >= 100) {
+      ball.vx *= -1;
+      ball.x = ball.vx;
     }
 
     // Bounce ball off paddles
+    var paddle1 = game.paddles.player1;
+    var paddle2 = game.paddles.player2;
     // Bottom paddle
-    if (game.ball.y + (game.ball.height / 2) > game.paddles.player2.y - (paddleHeight / 2) &&
-        game.ball.x >= game.paddles.player2.x - (paddleWidth / 2) &&
-        game.ball.x <= game.paddles.player2.x + (paddleWidth / 2)) {
-      game.ball.vy *= -1;
-      game.ball.y = game.paddles.player2.y - (game.ball.height / 2) - (paddleHeight / 2);
+    if (ball.y + (ball.height / 2) > paddle2.y - (paddleHeight / 2) &&
+        ball.x >= paddle2.x - (paddleWidth / 2) &&
+        ball.x <= paddle2.x + (paddleWidth / 2)) {
+      ball.vy *= -1;
+      ball.y = paddle2.y - (ball.height / 2) - (paddleHeight / 2);
     }
     // Top paddle
-    if (game.ball.y - (game.ball.height / 2) < game.paddles.player1.y + (paddleHeight / 2) &&
-        game.ball.x >= game.paddles.player1.x - (paddleWidth / 2) &&
-        game.ball.x <= game.paddles.player1.x + (paddleWidth / 2)) {
-      game.ball.vy *= -1;
-      game.ball.y = game.paddles.player1.y + (game.ball.height / 2) + (paddleHeight / 2);
+    if (ball.y - (ball.height / 2) < paddle1.y + (paddleHeight / 2) &&
+        ball.x >= paddle1.x - (paddleWidth / 2) &&
+        ball.x <= paddle1.x + (paddleWidth / 2)) {
+      ball.vy *= -1;
+      ball.y = paddle1.y + (game.ball.height / 2) + (paddleHeight / 2);
     }
-    // console.log(game.toJSON());
+    console.log(game.toJSON());
+  };
+
+  /**
+   * Updates paddle's x coordinate
+   * @param {String} Name of the paddle
+   * @param {Number} Paddle's new x coordinate
+   */
+  this.updatePaddleX = function (name, x) {
+    this.paddles[name].x = x;
   };
 
   /**
@@ -123,7 +137,7 @@ function Game (server) {
     var hasTwoPlayers = false;
 
     // Setup Socket.IO
-    var io = require('socket.io').listen(server);
+    var io = require('socket.io').listen(server, { log: false });
     io.sockets.on('connection', function(socket) {
       // Setup players
 
@@ -139,7 +153,7 @@ function Game (server) {
 
       // Receive paddle x
       socket.on('update paddle x', function(x) {
-        console.log(x);
+        game.updatePaddleX(socket.name, x);
       });
 
       // Push game state to clients
