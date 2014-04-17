@@ -146,6 +146,17 @@ function Game (server) {
     };
   };
 
+  /**
+   * AI for single player. Gets coordinates for enemy paddle
+   * @param  {Number} speed Speed of the AI in milliseconds
+   * @return {Number}       Enemy paddle's new x coordinate
+   */
+  this.followBall = function (speed) {
+    setInterval(function () {
+      
+    }, speed);
+  };
+
   // Setup
   (function setup() {
     var player1Connected = false;
