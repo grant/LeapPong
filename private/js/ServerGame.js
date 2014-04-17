@@ -153,7 +153,8 @@ function Game (server) {
    */
   this.followBall = function (speed) {
     setInterval(function () {
-      
+      var xCor = this.ball.x;
+      return xCor;
     }, speed);
   };
 
@@ -161,22 +162,32 @@ function Game (server) {
   (function setup() {
     var player1Connected = false;
     var hasTwoPlayers = false;
+    var type = '';
 
     // Setup Socket.IO
     var io = require('socket.io').listen(server, { log: false });
     io.sockets.on('connection', function(socket) {
+      // Determine game type
+      socket.on('game type', function (gameType) {
+        type = gameType;
+      });
       // Setup players
 
-      // Player 1
-      if (!player1Connected) {
-        player1Connected = true;
-        socket.name = 'player1';
-      } else if (!hasTwoPlayers) { // Player 2
-        hasTwoPlayers = true;
-        socket.name = 'player2';
+      // Different game type setups
+      if (type === '#single') {
+        // Figure out what to do if the user picks 'single'
+      } else {
+        // Player 1
+        if (!player1Connected) {
+          player1Connected = true;
+          socket.name = 'player1';
+        } else if (!hasTwoPlayers) { // Player 2
+          hasTwoPlayers = true;
+          socket.name = 'player2';
+        }
+        socket.emit('set name', socket.name);
       }
-      socket.emit('set name', socket.name);
-
+      
       // Receive paddle x
       socket.on('update paddle x', function(x) {
         game.updatePaddleX(socket.name, x);
@@ -186,9 +197,6 @@ function Game (server) {
       setInterval(function () {
         socket.emit('update game state', game.toJSON());
       }, 1000 / CLIENT_FRAME_RATE);
-
-
-      // socket.broadcast('update', game.toJSON());
     });
 
     // Setup game interval

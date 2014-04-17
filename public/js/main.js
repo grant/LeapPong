@@ -14,7 +14,7 @@ $(function() {
   $popup.find('button').click(function () {
     var $button = $(this);
     game.setup();
-
+    setType($button.attr('id'));
     $popup.fadeOut(FADE_TIME);
   });
 
@@ -60,6 +60,11 @@ $(function() {
   // Socket.IO
 
   var socket = io.connect();
+
+  var setType = function (type) {
+    socket.emit('game type', type);
+  }
+
   socket.on('update game state', function (gameState) {
     game.update(gameState);
   });
