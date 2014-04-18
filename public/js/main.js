@@ -15,6 +15,9 @@ $(function() {
     var $button = $(this);
     game.setup();
     setType($button.attr('id'));
+    if ($button.attr('id') === '#single') {
+      $('.enemy').css('transition', 'left 300ms');
+    }
     $popup.fadeOut(FADE_TIME);
   });
 
