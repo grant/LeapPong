@@ -2,6 +2,8 @@ var FADE_TIME = 200;
 var LEAP_RANGE = 200;
 var UPDATE_FRAME_RATE = 30; // fps
 
+var socket = io.connect();
+
 $(function() {
   var $popup = $('.popup');
   var $game = $('.game');
@@ -14,9 +16,9 @@ $(function() {
   $popup.find('button').click(function () {
     var $button = $(this);
     game.setup();
-    setType($button.attr('id'));
-    if ($button.attr('id') === '#single') {
-      $('.enemy').css('transition', 'left 300ms');
+    socket.emit('game type', $button.attr('id'));
+    if ($button.attr('id') === 'single') {
+      $('.enemy').css('transition', 'left 5ms');
     }
     $popup.fadeOut(FADE_TIME);
   });
@@ -61,13 +63,6 @@ $(function() {
   });
 
   // Socket.IO
-
-  var socket = io.connect();
-
-  var setType = function (type) {
-    socket.emit('game type', type);
-  }
-
   socket.on('update game state', function (gameState) {
     game.update(gameState);
   });
