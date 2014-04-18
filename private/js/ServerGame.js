@@ -3,10 +3,11 @@
  */
 function Game (server) {
   // Constants
-  var SERVER_FRAME_RATE = 30; // fps
+  var SERVER_FRAME_RATE = 40; // fps
   var CLIENT_FRAME_RATE = 30; // fps
+  var AI_INCREMENT = 0.6; // coordinate (0 - 100)
 
-  var BALL_SPEED = 15;
+  var BALL_SPEED = 25;
 
   // Fields
   var game = this;
@@ -29,7 +30,7 @@ function Game (server) {
       this.x = x;
       this.y = y;
     },
-    reset: function (x, y) {
+    reset: function () {
       this.vx = 0;
       this.vy = 1;
       this.x = 50;
@@ -109,7 +110,6 @@ function Game (server) {
       var middleOffset = (ball.x - bouncedPaddle.x) / ((paddleWidth + ball.width) / 2);
       ball.vx = middleOffset;
     }
-    // console.log(game.toJSON());
   };
 
   /**
@@ -126,6 +126,8 @@ function Game (server) {
    */
   this.reset = function () {
     this.ball.reset();
+    this.paddles.player1.x = 50;
+    this.paddles.player2.x = 50;
   };
 
   /**
@@ -146,38 +148,62 @@ function Game (server) {
     };
   };
 
+  /**
+   * AI for single player mode
+   * @return {Number} Paddle's x coordinate
+   */
+  this.followBall = function () {
+    var newX = this.paddles.player2.x;
+    if (this.ball.x < this.paddles.player2.x) {
+      newX -= AI_INCREMENT
+    } else if (this.ball.x > this.paddles.player2.x) {
+      newX += AI_INCREMENT
+    }
+    return newX;
+  };
+
   // Setup
   (function setup() {
     var player1Connected = false;
     var hasTwoPlayers = false;
+    var type = '';
 
     // Setup Socket.IO
     var io = require('socket.io').listen(server, { log: false });
     io.sockets.on('connection', function(socket) {
+      // Determine game type
+      socket.on('game type', function (gameType) {
+        type = gameType;
+      });
       // Setup players
 
-      // Player 1
-      if (!player1Connected) {
-        player1Connected = true;
-        socket.name = 'player1';
-      } else if (!hasTwoPlayers) { // Player 2
-        hasTwoPlayers = true;
-        socket.name = 'player2';
+      // Different game type setups
+      if (type === 'single') {
+        socket.emit('set name', 'player1');
+      } else {
+        // Player 1
+        if (!player1Connected) {
+          player1Connected = true;
+          socket.name = 'player1';
+        } else if (!hasTwoPlayers) { // Player 2
+          hasTwoPlayers = true;
+          socket.name = 'player2';
+        }
+        socket.emit('set name', socket.name);
       }
-      socket.emit('set name', socket.name);
-
+      
       // Receive paddle x
       socket.on('update paddle x', function(x) {
         game.updatePaddleX(socket.name, x);
+        if (type === 'single') {
+          game.updatePaddleX('player2', game.followBall());
+        }
       });
 
       // Push game state to clients
       setInterval(function () {
         socket.emit('update game state', game.toJSON());
       }, 1000 / CLIENT_FRAME_RATE);
-
-
-      // socket.broadcast('update', game.toJSON());
     });
 
     // Setup game interval

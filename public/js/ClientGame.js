@@ -26,6 +26,9 @@ function ClientGame () {
 
   // Methods
 
+  /**
+   * Function to initialize game
+   */
   this.setup = function () {
     this.hasStarted = true;
 
